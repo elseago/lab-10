@@ -1,7 +1,7 @@
 ---
 title: "Lab 10 - Grading the professor, Pt. 2"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Elayna Seago"
+date: "3/22/22"
 output: github_document
 ---
 
@@ -11,17 +11,159 @@ output: github_document
 library(tidyverse) 
 library(tidymodels)
 library(openintro)
+library(MASS)
 ```
 
 ### Exercise 1
+score = 3.88 + (x*.066)
+r-squared-.035
+adjusted-r-squared-.032
+```{r}
+m_bty <- lm(score ~ bty_avg, data=evals)  
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+print(m_bty)
+
+summary(m_bty)
+```
+
 
 ### Exercise 2
 
-...
+#score = 3.74 + (bty score*.074) + (gender*.17239)
+R squared = .059
+Adjusted R squared = .055
 
-Add exercise headings as needed.
+```{r}
+m_bty_gen <- lm(score ~ bty_avg + gender, data=evals)
+
+print(m_bty_gen)
+
+summary(m_bty_gen)
+```
+
+#Exercise 3
+
+#score = 3.74 + (bty score*.074) + (gender*.17239)
+
+the intercept is a professors expected score if they have a beauty score of zero and are female.
+
+slope 1 (.074) is the amount that each professors score is expected to increase if they have an increase in beauty score of 1.
+
+slope 2 (.172) is the amount that male professors score is higher on average (for male professor the multiplier is 1, for females it is 0).
+
+#Exercise 4
+
+5.5% variance explained
+
+# Exercise 5
+
+#male score = 3.74 + (.074*x) + (.17239*1)
+
+# Exercise 6
+males
+
+# Exercise 7
+
+I don't think I can tell the difference with the information I have.
+
+# Exercise 8
+bty
+r-squared-.035
+adjusted-r-squared-.032
+
+
+bty_gen
+R squared = .059
+Adjusted R squared = .055
+
+Adding gender leads to more variance explained in both R squared and adjusted r squared. it adds about 2% explanatory power.
+
+# Exercise 9
+bty=.066
+bty_gen=.074
+yes, it has changed it.
+
+# Exercise 10
+
+```{r}
+m_bty_rank <- lm(score ~ bty_avg + rank, data=evals)
+
+print(m_bty_rank)
+
+summary(m_bty_rank)
+```
+
+teaching track:
+score= 4.28 + (0) + (0)
+
+tenure track:
+score = 4.28 + (1*-.1297) + (0)
+
+tenured:
+score = 4.28 + (0) + (1*-.1452)
+
+the intercept = 4.28, this is a professors score at level 0 0 (aka teaching track)
+slope 1 = -.1297, this is how much a professors score decreases at level 1 0 (in the contrast matrix, this is a tenure track professor)
+slope 2 = -.1452, this is how much a professors score decreases at level 0 1 (tenured)
+
+# Exercise 11
+
+I think cls did eval is least helpful because the size of the class varies so the number of people who did it isn't really informative.
+
+# Exercise 12
+this is somewhat correct, not much explanatory power.
+```{r}
+m_cls_did_eval <- lm(score ~ cls_did_eval, data=evals)
+
+print(m_cls_did_eval)
+
+summary(m_cls_did_eval)
+```
+
+# exercise 13
+
+I would not include cls_did_eval because it does not add any additional information beyond what we get from # of students and percent who filled out the survey.
+
+# exercise 14
+
+```{r}
+m_full_model <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval + cls_students + cls_level + cls_profs + cls_credits + bty_avg, data=evals)
+
+print(m_full_model)
+
+summary(m_full_model)
+```
+
+# Exercise 15
+
+```{r}
+m_full_model <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval + cls_students + cls_level + cls_profs + cls_credits + bty_avg, data=evals)
+
+print(m_full_model)
+
+summary(m_full_model)
+```
+
+
+```{r}
+m_backward_model<-stepAIC(m_full_model , direction = "backward" , trace = FALSE)
+
+
+summary(m_backward_model)
+```
+
+#score = 3.45 + (.204*x1) + (.184*x2) + (-.161*x3) + (-.005*x4) + (.005*x5) + (.515*x6) + (.064*x7)
+
+# Exercise 16
+
+slope for age (numeric), as age increases by 1 year, overall score decreases by .005
+slope for language-non-english (categorical), for professors who do not speak English, overall score .161 lower, on average, than overall score for professors who do speak English
+
+# Exercise 17
+A professor with a high score would likely be a young, white, male, English speaker who is attractive and is teaching a one credit class
+
+# Exercise 18
+
+I would not be comfortable generalizing it yet since it is just from one university. I think there would likely be differences in other countries and also potentially across types of universities (eg HBCU, womens' colleges, small colleges).
+
+
